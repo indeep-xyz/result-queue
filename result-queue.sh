@@ -1,25 +1,51 @@
 #!/bin/bash
 
 MY_NAME=result-queue
-MY_VERSION=0.1
+MY_VERSION=1.0
 
 # - - - - - - - - - - - - - - - - - - - - -
 # command options
 # {{{1
 
-while getopts ic:d:n:l:s:h? OPT
+while getopts c:d:l:n:s:hi? OPT
 do
   case $OPT in
-    i)    FLG_INIT=1;;
     c)    CMD="$OPTARG";;
     d)    DIR="`echo "$OPTARG" | sed 's!/*$!!'`";;
-    n)    NAME="$OPTARG";;
+    i)    FLG_INIT=1;;
     l)    ECHO_LIMIT_TEMP=$OPTARG;;
+    n)    NAME="$OPTARG";;
     s)    SLEEP_FREQ_TEMP=$OPTARG;;
     h|\?)
       cat <<EOT
 $MY_NAME $MY_VERSION
 
+this script is write command result to the queue file and load preferentially from it.
+
+created to assist for random selection from the database.
+perhaps, will be speedy if pass the command for get extra records in moderation.
+
+[usage]
+  $MY_NAME [option]
+
+[option]
+  -c command for shell.
+     value of _STDOUT_ from the commands are handled as the result value by this script.
+
+  -d directory path for queue file.
+
+  -i initialize for command option.
+
+     write the -c option string to same directory of queue file.
+     filename's suffix is .command. the -c option does not require when exists .command file.
+
+  -l number of lines for echo.
+     until reach the number of lines, read the queue file and repeat the commands.
+
+  -n filename for queue file
+
+  -s the sleep frequency for command.
+     when the number of repeat to command has reached it, run sleep 1.
 EOT
       exit 0
       ;;
@@ -72,9 +98,6 @@ if [ -z "$CMD" ] \
   # - set variable
   CMD="`cat "$PATH_COMMAND"`"
 fi
-
-echo -e "echo limit = $ECHO_LIMIT"
-echo -e "echo count = $ECHO_COUNT"
 
 # }}}1 initialize variables
 
@@ -206,8 +229,10 @@ fi
 # main
 # {{{1
 
-# load from queue
+# echo from queue
 load_queue
+
+# echo from command
 run_command
 
 # }}}1 main

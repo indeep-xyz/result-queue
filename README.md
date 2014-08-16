@@ -5,12 +5,6 @@ this script is write command result to the queue file and load preferentially fr
 
 perhaps, be effective when select records at random from database.
 
-the most slow processing of the selection is not the select from records. parse, sort, extract, etc... database tools has some processing before the selection.
-
-therefore, get extra records as a technique. the processing of get extra records is faster than other some processing. but it has been garbage normally if unused.
-
-this script's feature make more speedy by write the unused records it to the queue and read in next processing. used records are removed from the queue file after use.
-
 ## USAGE
 
 you would be easy to understand if you read the `t/test-1.sh` and run it.
@@ -21,7 +15,9 @@ you would be easy to understand if you read the `t/test-1.sh` and run it.
 ./result-queue.sh -c "ls -l /" -l "3" -n 'tempfile'
 ```
 
-run this example then echo 3 lines from the command result. the lines of extra are written to the queue file. if run in same `-n` option, echo from the queue file. if the command result is not enough lines then repeat `-c` command until to reach number of `-l`. the name of the queue file is 'tempfile' by `-n`.n`.
+run this example then echo 3 lines from the command result. the lines of extra are written to the queue file.
+
+if run in same `-n` option, echo from the queue file. name of the queue file is 'tempfile'  by `-n`.
 
 ### opetions
 

@@ -19,7 +19,7 @@ run this example then echo 3 lines from the command result. the lines of extra a
 
 if run in same `-n` option, echo from the queue file. name of the queue file is 'tempfile'  by `-n`.
 
-### opetions
+### option
 
 #### -c
 

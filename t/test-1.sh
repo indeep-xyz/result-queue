@@ -5,7 +5,7 @@ BIN="$MY_DIR/../result-queue.sh"
 
 DIR="/tmp/result-queue-1/"
 NAME="test-1"
-GET_LINES=5
+GET_LINES=4
 
 CMD="`cat <<EOT
 ls -l

@@ -19,7 +19,7 @@ run this example then echo 3 lines from the command result. the lines of extra a
 
 if run in same `-n` option, echo from the queue file. name of the queue file is 'tempfile'  by `-n`.
 
-### option
+### opetions
 
 #### -c
 
@@ -43,6 +43,8 @@ initialize for command option.
 
 write the `-c` option string to same directory of queue file. filename's suffix is _.command_. the `-c` option does not require when exists _.command_ file.
 
+recommend to set with `-r` option. `-i` option does not support to reset the queue file.
+
 #### -l
 
 number of lines for echo.  until reach the number of lines, read the queue file and repeat the commands.
@@ -55,6 +57,10 @@ the filename for queue file.
 
 default value is _result-queue_ .
 
+#### -r
+
+reset queue file.
+
 #### -s
 
 the sleep frequency for command. when the number of repeat to command has reached it, run `sleep 1`.
@@ -64,4 +70,3 @@ default value is _50_ .
 ## AUTHOR
 
 [indeep-xyz](http://indeep.xyz/)
-

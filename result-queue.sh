@@ -1,13 +1,13 @@
 #!/bin/bash
 
 MY_NAME=result-queue
-MY_VERSION=1.0
+MY_VERSION=1.1
 
 # - - - - - - - - - - - - - - - - - - - - -
 # command options
 # {{{1
 
-while getopts c:d:l:n:s:hi? OPT
+while getopts c:d:l:n:s:hir? OPT
 do
   case $OPT in
     c)    CMD="$OPTARG";;
@@ -15,6 +15,7 @@ do
     i)    FLG_INIT=1;;
     l)    ECHO_LIMIT_TEMP=$OPTARG;;
     n)    NAME="$OPTARG";;
+    r)    FLG_RESET=1;;
     s)    SLEEP_FREQ_TEMP=$OPTARG;;
     h|\?)
       cat <<EOT
@@ -44,6 +45,8 @@ perhaps, will be speedy if pass the command for get extra records in moderation.
 
   -n filename for queue file
 
+  -r reset queue file
+
   -s the sleep frequency for command.
      when the number of repeat to command has reached it, run sleep 1.
 EOT
@@ -63,6 +66,7 @@ shift $((OPTIND - 1))
 # = defaults for the command option
 
 : ${FLG_INIT:=0}
+: ${FLG_RESET:=0}
 : ${DIR:='.'}
 : ${NAME:='result-queue'}
 : ${ECHO_LIMIT:=1}
@@ -228,6 +232,12 @@ fi
 # - - - - - - - - - - - - - - - - - - - - -
 # main
 # {{{1
+
+# reset queue file
+if [ "$FLG_RESET" = "1" ]; then
+
+  rm "$PATH_QUEUE" > /dev/null 2>&1
+fi
 
 # echo from queue
 load_queue

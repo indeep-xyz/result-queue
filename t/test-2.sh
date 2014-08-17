@@ -1,18 +1,18 @@
 #!/bin/bash
 #
 # test
-# basic specification
+# command result is empty (-e)
 
 MY_DIR="`readlink -f "$0" | sed 's!/[^/]*$!!'`"
 BIN="$MY_DIR/../result-queue.sh"
 
 DIR="/tmp/result-queue-t/"
-NAME="test-1"
+NAME="test-2"
 GET_LINES=4
+EMPTY_LIMIT=5
 
 CMD="`cat <<EOT
-ls -l
-echo test-test-test-test
+echo ''
 EOT`"
 
 # - - - - - - - - - - - - - - - - - -
@@ -21,4 +21,5 @@ EOT`"
 mkdir -p $DIR
 
 # run test
-$BIN -i -c "$CMD" -d "$DIR" -n "$NAME" -l "$GET_LINES"
+$BIN -c "$CMD" -d "$DIR" -n "$NAME" -l "$GET_LINES" -e $EMPTY_LIMIT
+

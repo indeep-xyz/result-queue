@@ -37,6 +37,12 @@ directory path for queue file.
 
 default value is _._ . (working directory at run)
 
+#### -e
+
+number of limit for the empty result.
+
+default value is _5_ .
+
 #### -i
 
 initialize for command option.

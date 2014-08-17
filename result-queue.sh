@@ -1,17 +1,18 @@
 #!/bin/bash
 
 MY_NAME=result-queue
-MY_VERSION=1.1
+MY_VERSION=1.2
 
 # - - - - - - - - - - - - - - - - - - - - -
 # command options
 # {{{1
 
-while getopts c:d:l:n:s:hir? OPT
+while getopts c:d:e:l:n:s:hir? OPT
 do
   case $OPT in
     c)    CMD="$OPTARG";;
     d)    DIR="`echo "$OPTARG" | sed 's!/*$!!'`";;
+    e)    EMPTY_LIMIT_TEMP=$OPTARG;;
     i)    FLG_INIT=1;;
     l)    ECHO_LIMIT_TEMP=$OPTARG;;
     n)    NAME="$OPTARG";;
@@ -34,6 +35,8 @@ perhaps, will be speedy if pass the command for get extra records in moderation.
      value of _STDOUT_ from the commands are handled as the result value by this script.
 
   -d directory path for queue file.
+
+  -e number of limit for the empty result.
 
   -i initialize for command option.
 
@@ -71,9 +74,11 @@ shift $((OPTIND - 1))
 : ${NAME:='result-queue'}
 : ${ECHO_LIMIT:=1}
 
+declare -i EMPTY_LIMIT=$EMPTY_LIMIT_TEMP
 declare -i ECHO_LIMIT=$ECHO_LIMIT_TEMP
 declare -i SLEEP_FREQ=$SLEEP_FREQ_TEMP
 
+[ $EMPTY_LIMIT -lt 1 ] && EMPTY_LIMIT=5
 [ $ECHO_LIMIT -lt 1 ] && ECHO_LIMIT=1
 [ $SLEEP_FREQ -lt 1 ] && SLEEP_FREQ=50
 
@@ -124,7 +129,7 @@ load_queue() {
 save_queue() { # {{{5
 
   local p="$PATH_QUEUE"
-  local p_temp="${p}.~temp"
+  local p_temp="${p}.~temp-$$"
 
   # check text for update
   if [ -n "$1" ]; then
@@ -170,6 +175,9 @@ process_queue() { # {{{5
 run_command() {
 
   local -i cnt=0
+  local -i empty_cnt=0
+  local -i echo_cnt=$ECHO_COUNT
+  local -i temp=0
 
   while :
   do
@@ -185,6 +193,17 @@ run_command() {
     # run command
     process_queue "$(eval "`echo -e "$CMD"`")"
 
+    # check number of increased lines
+    let temp=ECHO_COUNT-echo_cnt
+    if [ $temp -le 0 ]; then
+
+      # if empty
+      let empty_cnt++
+      [ $empty_cnt -ge $EMPTY_LIMIT ] && exit 101
+    fi
+    echo_cnt=$ECHO_COUNT
+
+    # check number of went commands
     let cnt++
     if [ $cnt -ge $SLEEP_FREQ ]; then
 
